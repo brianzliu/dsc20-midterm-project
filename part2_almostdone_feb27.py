@@ -123,7 +123,7 @@ class ImageProcessingTemplate:
         
         # pix_avg = (100 + 101 + 101) // 3 = 100
         # all_avg = sum of all pix_avg // number of pixels
-        # the sum of the sum of the sum of each pixel of each row of each column
+        # the sum of the sum of the sum of each pixel (and averaging them) of each row of each column
         
         total_brightness_pixels = sum(sum(sum(pixel) // 3 for pixel in row) for row in image.get_pixels())
         
