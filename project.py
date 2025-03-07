@@ -10,7 +10,7 @@ import os
 from PIL import Image
 import wave
 import struct
-# import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 
 NUM_CHANNELS = 3
 
@@ -582,7 +582,7 @@ class PremiumImageProcessing(ImageProcessingTemplate):
                   [-1, 8, -1],
                   [-1, -1, -1]]
 
-        edge_highlight_pixels = [[[0, 0, 0] for i in range(width)] for i in range(height)]
+        edge_highlight_pixels = [[[0, 0, 0] for j in range(width)] for i in range(height)]
 
         for row in range(height):
             for col in range(width):
@@ -651,144 +651,187 @@ def audio_save_helper(path, audio, sample_rate = 44100):
         wav_file.writeframes(byte_data)
 
 
-# def audio_visualizer(path, start=0, end=5):
-#     """
-#     Visualizes the given WAV file
-#     x-axis: time (sec)
-#     y-axis: wave amplitude
-#     ---
-#     Parameters: 
-#         path (str): path to the WAV file
-#         start (int): start timestamp in seconds, default 0
-#         end (int): end timestamp in seconds, default 5
-#     """
-#     with wave.open(path, "rb") as wav_file:
-#         sample_freq = wav_file.getframerate()  # Sample rate
-#         n_samples = wav_file.getnframes()  # Total number of samples
-#         duration = n_samples/sample_freq # Duration of audio, in seconds
+def audio_visualizer(path, start=0, end=5):
+    """
+    Visualizes the given WAV file
+    x-axis: time (sec)
+    y-axis: wave amplitude
+    ---
+    Parameters: 
+        path (str): path to the WAV file
+        start (int): start timestamp in seconds, default 0
+        end (int): end timestamp in seconds, default 5
+    """
+    with wave.open(path, "rb") as wav_file:
+        sample_freq = wav_file.getframerate()  # Sample rate
+        n_samples = wav_file.getnframes()  # Total number of samples
+        duration = n_samples/sample_freq # Duration of audio, in seconds
 
-#         if any([type(param) != int for param in [start, end]]):
-#             raise TypeError("start and end should be integers.")
-#         if (start < 0) or (start > duration) or (end < 0) or (end > duration) or start >= end:
-#             raise ValueError(f"Invalid timestamp: start and end should be between 0 and {int(duration)}, and start < end.")
+        if any([type(param) != int for param in [start, end]]):
+            raise TypeError("start and end should be integers.")
+        if (start < 0) or (start > duration) or (end < 0) or (end > duration) or start >= end:
+            raise ValueError(f"Invalid timestamp: start and end should be between 0 and {int(duration)}, and start < end.")
         
-#         num_frames = wav_file.getnframes()  # Total number of frames
-#         num_channels = wav_file.getnchannels()  # Number of channels (1 for mono, 2 for stereo)
-#         sample_width = wav_file.getsampwidth()  # Number of bytes per sample (e.g., 2 for 16-bit)
+        num_frames = wav_file.getnframes()  # Total number of frames
+        num_channels = wav_file.getnchannels()  # Number of channels (1 for mono, 2 for stereo)
+        sample_width = wav_file.getsampwidth()  # Number of bytes per sample (e.g., 2 for 16-bit)
         
-#         # Extract audio wave as list
-#         raw_bytes = wav_file.readframes(num_frames)
-#         fmt = f"{num_frames * num_channels}{'h' if sample_width == 2 else 'B'}"
-#         audio_data = list(struct.unpack(fmt, raw_bytes))
+        # Extract audio wave as list
+        raw_bytes = wav_file.readframes(num_frames)
+        fmt = f"{num_frames * num_channels}{'h' if sample_width == 2 else 'B'}"
+        audio_data = list(struct.unpack(fmt, raw_bytes))
 
-#         # Plot the audio wave
-#         time = np.linspace(start, end, num=(end - start)*sample_freq)
-#         audio_data = audio_data[start*sample_freq:end*sample_freq]
-#         plt.figure(figsize=(15, 5))
-#         plt.ylim([-32768, 32767])
-#         plt.plot(time, audio_data)
-#         plt.title(f'Audio Plot of {path} from {start}s to {end}s')
-#         plt.ylabel('sound wave')
-#         plt.xlabel('time (s)')
-#         plt.xlim(start, end)
-#         plt.show()
+        # Plot the audio wave
+        time = np.linspace(start, end, num=(end - start)*sample_freq)
+        audio_data = audio_data[start*sample_freq:end*sample_freq]
+        plt.figure(figsize=(15, 5))
+        plt.ylim([-32768, 32767])
+        plt.plot(time, audio_data)
+        plt.title(f'Audio Plot of {path} from {start}s to {end}s')
+        plt.ylabel('sound wave')
+        plt.xlabel('time (s)')
+        plt.xlim(start, end)
+        plt.show()
 
 
-# # --------------------------------------------------------------------------- #
+# --------------------------------------------------------------------------- #
 
-# # Part 5: Multimedia Processing
-# class AudioWave():
-#     """
-#         Represents audio through a 1-dimensional array of amplitudes
-#     """
-#     def __init__(self, amplitudes):
-#         self.wave = amplitudes
+# Part 5: Multimedia Processing
+class AudioWave():
+    """
+        Represents audio through a 1-dimensional array of amplitudes
+    """
+    def __init__(self, amplitudes):
+        self.wave = amplitudes
 
-# class PremiumPlusMultimediaProcessing(PremiumImageProcessing):
-#     """
-#         Represents the paid tier of multimedia processing
-#     """
-#     def __init__(self):
-#         """
-#         Creates a new PremiumPlusMultimediaProcessing object
+class PremiumPlusMultimediaProcessing(PremiumImageProcessing):
+    """
+        Represents the paid tier of multimedia processing
+    """
+    def __init__(self):
+        """
+        Creates a new PremiumPlusMultimediaProcessing object
 
-#         # Check the expected cost
-#         >>> multi_proc = PremiumPlusMultimediaProcessing()
-#         >>> multi_proc.get_cost()
-#         75
-#         """
-#         # YOUR CODE GOES HERE #
-#         self.cost = ...
+        # Check the expected cost
+        >>> multi_proc = PremiumPlusMultimediaProcessing()
+        >>> multi_proc.get_cost()
+        75
+        """
+        super().__init__()
+        self.cost = 75
     
-#     def reverse_song(self, audio):
-#         """
-#         Reverses the audio of the song.
+    def reverse_song(self, audio):
+        """
+        Reverses the audio of the song.
 
-#         >>> multi_proc = PremiumPlusMultimediaProcessing()
-#         >>> audio = audio_read_helper('audio/one_summers_day.wav')
-#         >>> audio_reversed = multi_proc.reverse_song(audio)
-#         >>> audio_exp = audio_read_helper('audio/exp/one_summers_day_reversed.wav')
-#         >>> audio_exp.wave == audio_reversed.wave # Check reverse_song output
-#         True
-#         >>> audio_save_helper('audio/out/one_summers_day_reversed.wav', audio_reversed)
-#         """
-#         # YOUR CODE GOES HERE #
-    
-#     def slow_down(self, audio, factor):
-#         """
-#         Slows down the song by a certain factor.
-
-#         >>> multi_proc = PremiumPlusMultimediaProcessing()
-#         >>> audio = audio_read_helper('audio/one_summers_day.wav')
-#         >>> audio_slow = multi_proc.slow_down(audio, 2)
-#         >>> audio_exp = audio_read_helper('audio/exp/one_summers_day_slow.wav')
-#         >>> audio_exp.wave == audio_slow.wave # Check slow_down output
-#         True
-#         >>> audio_save_helper('audio/out/one_summers_day_slow.wav', audio_slow)
-#         """
-#         # YOUR CODE GOES HERE #
-    
-#     def speed_up(self, audio, factor):
-#         """
-#         Speeds up the song by a certain factor.
-
-#         >>> multi_proc = PremiumPlusMultimediaProcessing()
-#         >>> audio = audio_read_helper('audio/one_summers_day.wav')
-#         >>> audio_sped_up = multi_proc.speed_up(audio, 2)
-#         >>> audio_exp = audio_read_helper('audio/exp/one_summers_day_sped_up.wav')
-#         >>> audio_exp.wave == audio_sped_up.wave # Check speed_up output
-#         True
-#         >>> audio_save_helper('audio/out/one_summers_day_sped_up.wav', audio_sped_up)
-#         """
-#         # YOUR CODE GOES HERE #
-
-#     def reverb(self, audio):
-#         """
-#         Adds a reverb/echo effect to the song.
-
-#         >>> multi_proc = PremiumPlusMultimediaProcessing()
-#         >>> audio = audio_read_helper('audio/one_summers_day.wav')
-#         >>> audio_reverb = multi_proc.reverb(audio)
-#         >>> audio_exp = audio_read_helper('audio/exp/one_summers_day_reverb.wav')
-#         >>> audio_exp.wave == audio_reverb.wave # Check reverb output
-#         True
-#         >>> audio_save_helper('audio/out/one_summers_day_reverb.wav', audio_reverb)
-#         """
-#         # YOUR CODE GOES HERE #
+        >>> multi_proc = PremiumPlusMultimediaProcessing()
+        >>> audio = audio_read_helper('audio/one_summers_day.wav')
+        >>> audio_reversed = multi_proc.reverse_song(audio)
+        >>> audio_exp = audio_read_helper('audio/exp/one_summers_day_reversed.wav')
+        >>> audio_exp.wave == audio_reversed.wave # Check reverse_song output
+        True
+        >>> audio_save_helper('audio/out/one_summers_day_reversed.wav', audio_reversed)
+        """
+        if not isinstance(audio, AudioWave):
+            raise TypeError()
         
-#     def clip_song(self, audio, start, end):
-#         """
-#         Clips a song based on a specified start and end.
+        return AudioWave([amp for amp in audio.wave[::-1]])
+    
+    def slow_down(self, audio, factor):
+        """
+        Slows down the song by a certain factor.
+
+        >>> multi_proc = PremiumPlusMultimediaProcessing()
+        >>> audio = audio_read_helper('audio/one_summers_day.wav')
+        >>> audio_slow = multi_proc.slow_down(audio, 2)
+        >>> audio_exp = audio_read_helper('audio/exp/one_summers_day_slow.wav')
+        >>> audio_exp.wave == audio_slow.wave # Check slow_down output
+        True
+        >>> audio_save_helper('audio/out/one_summers_day_slow.wav', audio_slow)
+
+        >>> audio = audio_read_helper('audio/what_once_was.wav')
+        >>> audio_slow = multi_proc.slow_down(audio, 2)
+        >>> audio_save_helper('audio/out/what_once_was_slow.wav', audio_slow)
+        """
+        if not isinstance(audio, AudioWave):
+            raise TypeError()
+        if not isinstance(factor, int):
+            raise TypeError()
+        if not factor > 0:
+            raise ValueError()
         
-#         >>> multi_proc = PremiumPlusMultimediaProcessing()
-#         >>> audio = audio_read_helper('audio/one_summers_day.wav')
-#         >>> audio_clipped = multi_proc.clip_song(audio, 30, 70)
-#         >>> audio_exp = audio_read_helper('audio/exp/one_summers_day_clipped.wav')
-#         >>> audio_exp.wave == audio_clipped.wave # Check clip_song output
-#         True
-#         >>> audio_save_helper('audio/out/one_summers_day_clipped.wav', audio_clipped)
-#         """
-#         # YOUR CODE GOES HERE #
+        return AudioWave([amp for amp in audio.wave for _ in range(factor)])
+    
+    def speed_up(self, audio, factor):
+        """
+        Speeds up the song by a certain factor.
+
+        >>> multi_proc = PremiumPlusMultimediaProcessing()
+        >>> audio = audio_read_helper('audio/one_summers_day.wav')
+        >>> audio_sped_up = multi_proc.speed_up(audio, 2)
+        >>> audio_exp = audio_read_helper('audio/exp/one_summers_day_sped_up.wav')
+        >>> audio_exp.wave == audio_sped_up.wave # Check speed_up output
+        True
+        >>> audio_save_helper('audio/out/one_summers_day_sped_up.wav', audio_sped_up)
+        """
+        if not isinstance(audio, AudioWave):
+            raise TypeError()
+        if not isinstance(factor, int):
+            raise TypeError()
+        if not factor > 0:
+            raise ValueError()
+        
+        return AudioWave([amp for amp in audio.wave[::factor]])
+
+    def reverb(self, audio):
+        """
+        Adds a reverb/echo effect to the song.
+
+        >>> multi_proc = PremiumPlusMultimediaProcessing()
+        >>> audio = audio_read_helper('audio/one_summers_day.wav')
+        >>> audio_reverb = multi_proc.reverb(audio)
+        >>> audio_exp = audio_read_helper('audio/exp/one_summers_day_reverb.wav')
+        >>> audio_exp.wave == audio_reverb.wave # Check reverb output
+        True
+        >>> audio_save_helper('audio/out/one_summers_day_reverb.wav', audio_reverb)
+
+        # >>> audio = audio_read_helper('audio/what_once_was.wav')
+        # >>> audio_reverb = multi_proc.reverb(audio)
+        # >>> audio_save_helper('audio/out/what_once_was_reverb.wav', audio_reverb)
+        """
+        if not isinstance(audio, AudioWave):
+            raise TypeError()
+        
+        return AudioWave(audio.wave[:4] + [min(32767, max(-32768, round(sum([audio.wave[i-5+j] * (j/5) for j in range(1,6)])))) for i in range(4, len(audio.wave))])
+        
+    def clip_song(self, audio, start, end):
+        """
+        Clips a song based on a specified start and end.
+        
+        >>> multi_proc = PremiumPlusMultimediaProcessing()
+        >>> audio = audio_read_helper('audio/one_summers_day.wav')
+        >>> audio_clipped = multi_proc.clip_song(audio, 30, 70)
+        >>> audio_exp = audio_read_helper('audio/exp/one_summers_day_clipped.wav')
+        >>> audio_exp.wave == audio_clipped.wave # Check clip_song output
+        True
+        >>> audio_save_helper('audio/out/one_summers_day_clipped.wav', audio_clipped)
+        """
+        if not isinstance(audio, AudioWave):
+            raise TypeError()
+        if not isinstance(start, int) or not isinstance(end, int):
+            raise TypeError()
+        if not 0 <= start <= 100:
+            raise ValueError()
+        if not 0 <= end <= 100:
+            raise ValueError()
+        
+        if end <= start:
+            return AudioWave([])
+        
+        start_index = int(len(audio.wave) * (start / 100))
+        end_index = int(len(audio.wave) * (end / 100))
+
+        return AudioWave(audio.wave[start_index:end_index+1])
 
 
 # # Part 6: Image KNN Classifier #
