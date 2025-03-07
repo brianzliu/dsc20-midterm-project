@@ -110,7 +110,6 @@ class ImageProcessingTemplate:
         
         return RGBImage(rotated180_pixels)
         
-        
     def get_average_brightness(self, image):
         """
         Returns the average brightness for the given image
@@ -131,8 +130,6 @@ class ImageProcessingTemplate:
         
         return total_brightness_pixels // all_pixels
 
-'''
-    
     def adjust_brightness(self, image, intensity):
         """
         Returns a new image with adjusted brightness level
@@ -145,4 +142,10 @@ class ImageProcessingTemplate:
         True
         >>> img_save_helper('img/out/test_image_32x32_adjusted.png', img_adjust)
         """
-        # YOUR CODE GOES HERE #
+        
+        new_img = [[list(map(lambda x: int(x * intensity) if x * intensity <= 255 and x * intensity >= 0 else 0 if x * intensity < 0 else 255, pixel)) for pixel in row] for row in image.get_pixels()]
+
+        if not isinstance(intensity, float):
+            raise TypeError()
+        
+        return RGBImage(new_img)
