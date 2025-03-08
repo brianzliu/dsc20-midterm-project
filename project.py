@@ -10,7 +10,7 @@ import os
 from PIL import Image
 import wave
 import struct
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 
 NUM_CHANNELS = 3
 
@@ -749,9 +749,9 @@ class PremiumPlusMultimediaProcessing(PremiumImageProcessing):
         True
         >>> audio_save_helper('audio/out/one_summers_day_slow.wav', audio_slow)
 
-        >>> audio = audio_read_helper('audio/what_once_was.wav')
-        >>> audio_slow = multi_proc.slow_down(audio, 2)
-        >>> audio_save_helper('audio/out/what_once_was_slow.wav', audio_slow)
+        # >>> audio = audio_read_helper('audio/what_once_was.wav')
+        # >>> audio_slow = multi_proc.slow_down(audio, 2)
+        # >>> audio_save_helper('audio/out/what_once_was_slow.wav', audio_slow)
         """
         if not isinstance(audio, AudioWave):
             raise TypeError()
